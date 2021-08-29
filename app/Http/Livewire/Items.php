@@ -22,4 +22,9 @@ class Items extends Component
 
         return view('livewire.items', compact('items'));
     }
+
+    public function updatingActive()
+    {
+        $this->resetPage();
+    }
 }
