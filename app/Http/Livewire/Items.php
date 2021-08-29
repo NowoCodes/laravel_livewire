@@ -14,14 +14,22 @@ class Items extends Component
     public $q;
     public $sortBy = 'id';
     public $sortAsc = true;
+    public $item;
 
     public $confirmingItemDeletion = false;
+    public $confirmingItemAddition = false;
 
     protected $queryString = [
         'active' => ['except' => false],
         'q' => ['except' => ''],
         'sortBy' => ['except' => 'id'],
         'sortAsc' => ['except' => true],
+    ];
+
+    protected $rules = [
+        'item.name' => 'required|string|min:4',
+        'item.price' => 'required|numeric|between:1,100',
+        'item.status' => 'boolean',
     ];
 
     public function render()
@@ -36,13 +44,11 @@ class Items extends Component
             ->when($this->active, function ($query) {
                 return $query->active();
             })
-            ->orderBy($this->sortBy, $this->sortAsc ? 'ASC' : 'DESC')
-            ;
+            ->orderBy($this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
 
-        $query = $items->toSql();
         $items = $items->paginate(10);
 
-        return view('livewire.items', compact('items', 'query'));
+        return view('livewire.items', compact('items'));
     }
 
     public function updatingActive()
@@ -72,5 +78,24 @@ class Items extends Component
     {
         $item->delete();
         $this->confirmingItemDeletion = false;
+    }
+
+    public function confirmItemAddition()
+    {
+        $this->reset(['item']);
+        $this->confirmingItemAddition = true;
+    }
+
+    public function saveItem()
+    {
+        $this->validate();
+
+        auth()->user()->items()->create([
+            'name' => $this->item['name'],
+            'price' => $this->item['price'],
+            'status' => $this->item['status'] ?? 0,
+        ]);
+
+        $this->confirmingItemAddition = false;
     }
 }

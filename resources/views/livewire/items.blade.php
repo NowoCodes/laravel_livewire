@@ -1,9 +1,12 @@
 <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
-  <div class="mt-8 text-2xl">
-    Items
+  <div class="mt-8 text-2xl flex justify-between">
+    <div>Items</div>
+    <div class="mr-2">
+      <x-jet-button wire:click="confirmItemAddition" class="bg-blue-500 hover:bg-blue-700">
+        {{ __('Add New Item') }}
+      </x-jet-button>
+    </div>
   </div>
-
-  {{ $query }}
 
   <div class="mt-6">
     <div class="flex justify-between">
@@ -92,6 +95,50 @@
       <x-jet-danger-button class="ml-2" wire:click="deleteItem({{ $confirmingItemDeletion }})"
         wire:loading.attr="disabled">
         {{ __('Delete Item') }}
+      </x-jet-danger-button>
+    </x-slot>
+  </x-jet-dialog-modal>
+
+  <!-- Add Item Confirmation Modal -->
+  <x-jet-dialog-modal wire:model="confirmingItemAddition">
+    <x-slot name="title">
+        <h1 class="uppercase">
+            {{ __('Add Item') }}
+        </h1>
+    </x-slot>
+
+    <x-slot name="content">
+      <!-- Name -->
+      <div class="col-span-6 sm:col-span-4">
+        <x-jet-label for="name" value="{{ __('Name') }}" />
+        <x-jet-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="item.name" />
+        <x-jet-input-error for="item.name" class="mt-2" />
+      </div>
+
+      <!-- Price -->
+      <div class="col-span-6 sm:col-span-4 mt-2">
+        <x-jet-label for="price" value="{{ __('Price') }}" />
+        <x-jet-input id="price" type="text" class="mt-1 block w-full" wire:model.defer="item.price" />
+        <x-jet-input-error for="item.price" class="mt-2" />
+      </div>
+
+      <!-- Status -->
+      <div class="col-span-6 sm:col-span-4 mt-2">
+        <label for="status" class="flex items-center">
+          <x-jet-input id="status" type="checkbox" class="form-checkbox" wire:model.defer="item.status" />
+          <span class="ml-2 text-sm text-gray-600">Active</span>
+        </label>
+      </div>
+    </x-slot>
+
+    <x-slot name="footer">
+      <x-jet-secondary-button wire:click="$toggle('confirmingItemAddition')" wire:loading.attr="disabled">
+        {{ __('Cancel') }}
+      </x-jet-secondary-button>
+
+      <x-jet-danger-button class="ml-2 bg-green-500 hover:bg-green-700" wire:click="saveItem()"
+        wire:loading.attr="disabled">
+        {{ __('Save Item') }}
       </x-jet-danger-button>
     </x-slot>
   </x-jet-dialog-modal>
