@@ -60,7 +60,9 @@
               <td class="border px-4 py-2">{{ $item->status ? 'Active' : 'Not-Active' }}</td>
             @endif
             <td class="border px-4 py-2">
-              {{ __('Edit') }}
+              <x-jet-button wire:click="confirmItemEdit({{ $item->id }})" class="bg-yellow-500 hover:bg-yellow-700">
+                {{ __('Edit') }}
+              </x-jet-button>
 
               <x-jet-danger-button wire:click="confirmItemDeletion({{ $item->id }})" wire:loading.attr="disabled">
                 {{ __('Delete') }}
@@ -102,9 +104,9 @@
   <!-- Add Item Confirmation Modal -->
   <x-jet-dialog-modal wire:model="confirmingItemAddition">
     <x-slot name="title">
-        <h1 class="uppercase">
-            {{ __('Add Item') }}
-        </h1>
+      <h1 class="uppercase">
+        {{ isset($this->item->id) ? 'Edit Item' : 'Add Item' }}
+    </h1>
     </x-slot>
 
     <x-slot name="content">
