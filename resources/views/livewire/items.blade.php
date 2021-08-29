@@ -3,9 +3,13 @@
     Items
   </div>
 
+  {{ $query }}
+
   <div class="mt-6">
     <div class="flex justify-between">
-      <div></div>
+      <div>
+        <input wire:model.debounce.500ms='q' type="search" placeholder="Search">
+      </div>
       <div class="mr-2">
         <input type="checkbox" class="mr-2 leading-tight" wire:model='active'> Active Only
       </div>
